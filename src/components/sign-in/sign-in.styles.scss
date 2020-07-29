@@ -1,0 +1,19 @@
+.sign-in {
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 360px;
+
+    .title {
+        margin-bottom: 15px;
+    }
+    .sub-title {
+        margin: 20px 0;
+    }
+    
+
+    .button-group{
+        display: flex;
+        justify-content: space-between;
+    }
+}

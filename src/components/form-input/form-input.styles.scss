@@ -1,0 +1,39 @@
+@mixin shirnkLabel {
+    font-size: 12px;
+    top: -14px;
+    
+}
+
+.form-input {
+    position: relative;
+    margin: 45px 0;
+
+    input {
+       width: 100%;
+       padding: 10px;
+       border: none;
+       border-bottom: 1px solid gray;
+        
+        &:focus {
+            outline: 0;
+        }
+
+        &:focus ~ .shrink {
+            @include shirnkLabel();
+        }
+    }
+
+    label {
+    font-size: 16px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 10px;
+    top: 10px;
+    transition: 300ms ease all;
+    }
+
+&.shrink {
+    @include shirnkLabel();
+}
+}

@@ -1,26 +1,65 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+import Header from './components/header/header.component';
+import SignInAndSignUp from './pages/sign-in-and-sign-up.component';
+import {auth, createUserProfileDocument} from './firebase/firebase.utiles';
+
+import './App.css';
+const HomePage = () => (
+    <div>
+        <h1>HomePage</h1>
+        <Link to="/signIn">Sign In</Link>
     </div>
-  );
+);
+class App extends React.Component {
+    state = {
+        currentUser: {
+            displayName: '',
+            email: '',
+            id: ''
+        }
+    }
+    unsubscribeFromAuth = null
+    componentDidMount() {
+        this.unsubscribeFromAuth = auth.onAuthStateChanged(async user => {
+            if(user){
+                const userRef = await createUserProfileDocument(user);
+                
+                userRef.onSnapshot((userAuth)=> {
+                    
+                        const {displayName, email, id} = userAuth.data();
+                        
+                        this.setState({
+                            currentUser: {
+                                displayName,
+                                email,
+                                id
+                            }
+                        });
+                        console.log(this.state.currentUser);
+                       
+                    
+                    
+                });
+            } else {this.setState({currentUser: user})}
+            console.log(this.state.currenUser);
+        });
+    }
+
+    componentWillUnmount(){
+        this.unsubscribeFromAuth();
+    }
+    render(){
+        return(
+            <BrowserRouter>
+                <Header user={this.state.currentUser} />
+                <Route path="/" exact component={HomePage} />
+                <Route path="/signIn" component={SignInAndSignUp} />
+            </BrowserRouter>
+            
+        );
+    }
 }
 
 export default App;
